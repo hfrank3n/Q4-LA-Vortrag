@@ -1,5 +1,5 @@
-from lib2to3.pgen2.token import RIGHTSHIFT
 from manim import *
+from numpy import *
 
 
 class Slide(Scene):
@@ -42,3 +42,69 @@ class Slide(Scene):
             })
         mathGroup.to_edge(RIGHT)
         self.add(mathGroup)
+
+
+class LineareTransformationenSlide(Scene):
+    def construct(self):
+        text1 = Tex("Lineare ", font_size=50)
+        text2 = Tex("Transformation", font_size=50)
+        text = VGroup(text1, text2)
+        text.arrange(RIGHT)
+        text.to_corner(LEFT + UP, buff=1)
+
+        brace = Brace(text2, sharpness=0.7)
+
+        function_equation = MathTex(r"T(\vec{v_1})=\vec{v_2}")
+        function_equation.next_to(brace, DOWN)
+
+        matrix_equation = MathTex(r"T\cdot\vec{v_1}=\vec{v_2}")
+        matrix_equation.next_to(function_equation, buff=4)
+        matrix_equation.to_edge(RIGHT, buff=1.4)
+
+        rotation_matrix_45deg = [
+            [cos(radians(45)), -sin(radians(45))], [sin(radians(45)), cos(radians(45))]]
+        left_grid = Axes(
+            x_range=[-0.8, 2, 1],
+            y_range=[-0.8, 2, 1],
+            x_length=2.8,
+            y_length=2.8,
+            axis_config={
+                "include_numbers": True,
+                "font_size": 24,
+                "tip_length": 0.2
+            },
+            tips=True,
+        )
+
+        v1 = Vector([1, 0], tip_length=0.25)
+        v2 = Vector([0, 1], tip_length=0.25)
+        vGroup = VGroup(v1, v2)
+        left_grid.add(vGroup)
+        left_grid[2].set_color(ORANGE)
+
+        transformation_arrow = MathTex(r"\longleftrightarrow", font_size=80)
+        transformation_text = MathTex("T")
+        transformation_text.next_to(transformation_arrow, UP, buff=-0.06)
+        transformation_label = VGroup(
+            transformation_arrow, transformation_text)
+
+        right_grid = left_grid.copy()
+        right_grid[2].set_color(BLUE)
+        right_grid[2].apply_matrix(rotation_matrix_45deg)
+
+        left_grid[2].shift(left_grid.get_origin())
+        right_grid[2].shift(right_grid.get_origin())
+
+        left_grid.to_corner(LEFT+DOWN, buff=1)
+        transformation_label.next_to(left_grid, buff=1, aligned_edge=RIGHT)
+        right_grid.next_to(transformation_label, buff=1, aligned_edge=LEFT)
+
+        matrix_body = Matrix([["i_1", "j_1"], ["i_2", "j_2"]], h_buff=1.0)
+        matrix_label = MathTex(r"T =")
+        matrix_label.next_to(matrix_body, direction=LEFT)
+        matrix = VGroup(matrix_body, matrix_label)
+        matrix.next_to(matrix_equation, direction=DOWN, buff=2)
+        matrix.to_edge(RIGHT, buff=1)
+
+        self.add(text, brace, function_equation, matrix_equation)
+        self.add(left_grid, right_grid, transformation_label, matrix)
