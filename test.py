@@ -46,31 +46,29 @@ class Test(Scene):
             },
             tips=True,
         )
-        grid1.to_corner(LEFT+DOWN, buff=1.3)
-        v1 = Vector([1, 0], color=ORANGE, tip_length=0.25)
-        v2 = Vector([0, 1], color=ORANGE, tip_length=0.25)
-        v3 = v1.copy()
-        v4 = v2.copy()
-        v1.shift(grid1.get_origin())
-        v2.shift(grid1.get_origin())
+
+        v1 = Vector([1, 0], tip_length=0.25)
+        v2 = Vector([0, 1], tip_length=0.25)
+        vGroup = VGroup(v1, v2)
+        grid1.add(vGroup)
+        grid1[2].set_color(ORANGE)
 
         arrow_text = MathTex(
             r"\overset{T}{\longleftrightarrow}", font_size=100)
-        arrow_text.next_to(grid1, buff=0.5, aligned_edge=UP)
 
         grid2 = grid1.copy()
-        grid2.next_to(arrow_text, buff=0.5, aligned_edge=UP)
-        v3 = v3.apply_matrix(rotation_matrix_45deg)
-        v4 = v4.apply_matrix(rotation_matrix_45deg)
-        v3.set_color(BLUE)
-        v3.set_tip_length(0.25)
-        v4.set_color(BLUE)
-        v4.set_tip_length(0.25)
-        v3.shift(grid2.get_origin())
-        v4.shift(grid2.get_origin())
+        grid2[2].set_color(BLUE)
+        grid2[2].apply_matrix(rotation_matrix_45deg)
 
-        self.add(text1, grid1, arrow_text, v1, v2, grid2,
-                 v3, v4, text2, m1, text3, text4, text5, arrow1, arrow2)
+        grid1[2].shift(grid1.get_origin())
+        grid2[2].shift(grid2.get_origin())
+
+        grid1.to_corner(LEFT+DOWN, buff=1.3)
+        arrow_text.next_to(grid1, buff=0.5, aligned_edge=UP)
+        grid2.next_to(arrow_text, buff=0.5, aligned_edge=UP)
+
+        self.add(text1, arrow_text, grid1, grid2, text2,
+                 m1, text3, text4, text5, arrow1, arrow2)
 
         # circle = Circle()
         # circle.set_fill(PINK, opacity=0.5)
