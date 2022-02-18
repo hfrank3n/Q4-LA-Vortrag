@@ -4,6 +4,9 @@ from numpy import *
 
 class Test(Scene):
     def construct(self):
+        rotation_matrix_45deg = [
+            [cos(radians(45)), -sin(radians(45))], [sin(radians(45)), cos(radians(45))]]
+
         text1 = MathTex(r"T(\vec{v_1})=\vec{v_2}")
         text1.to_corner(LEFT+UP, buff=2)
         text1.shift(2*RIGHT)
@@ -46,6 +49,8 @@ class Test(Scene):
         grid1.to_corner(LEFT+DOWN, buff=1.3)
         v1 = Vector([1, 0], color=ORANGE, tip_length=0.25)
         v2 = Vector([0, 1], color=ORANGE, tip_length=0.25)
+        v3 = v1.copy()
+        v4 = v2.copy()
         v1.shift(grid1.get_origin())
         v2.shift(grid1.get_origin())
 
@@ -55,8 +60,12 @@ class Test(Scene):
 
         grid2 = grid1.copy()
         grid2.next_to(arrow_text, buff=0.5, aligned_edge=UP)
-        v3 = Vector([1, 1], color=BLUE, tip_length=0.25)
-        v4 = Vector([-1, 1], color=BLUE, tip_length=0.25)
+        v3 = v3.apply_matrix(rotation_matrix_45deg)
+        v4 = v4.apply_matrix(rotation_matrix_45deg)
+        v3.set_color(BLUE)
+        v3.set_tip_length(0.25)
+        v4.set_color(BLUE)
+        v4.set_tip_length(0.25)
         v3.shift(grid2.get_origin())
         v4.shift(grid2.get_origin())
 
