@@ -7,34 +7,34 @@ class Test(Scene):
         rotation_matrix_45deg = [
             [cos(radians(45)), -sin(radians(45))], [sin(radians(45)), cos(radians(45))]]
 
-        text1 = MathTex(r"T(\vec{v_1})=\vec{v_2}")
-        text1.to_corner(LEFT+UP, buff=2)
-        text1.shift(2*RIGHT)
+        function_equation = MathTex(r"T(\vec{v_1})=\vec{v_2}")
+        function_equation.to_corner(LEFT+UP, buff=2)
+        function_equation.shift(2*RIGHT)
 
-        text2 = MathTex(r"T\cdot\vec{v_1}=\vec{v_2}")
-        text2.next_to(text1, buff=4)
+        matrix_equation = MathTex(r"T\cdot\vec{v_1}=\vec{v_2}")
+        matrix_equation.next_to(function_equation, buff=4)
 
-        m1 = Matrix([["i_1", "j_1"], ["i_2", "j_2"]])
-        m1.next_to(text2, direction=DOWN, buff=2)
+        matrix = Matrix([["i_1", "j_1"], ["i_2", "j_2"]])
+        matrix.next_to(matrix_equation, direction=DOWN, buff=2)
 
-        text3 = MathTex(r"T =")
-        text3.next_to(m1, direction=LEFT)
+        matrix_label = MathTex(r"T =")
+        matrix_label.next_to(matrix, direction=LEFT)
 
-        text4 = MathTex(r"\hat{i}")
-        text4.next_to(m1, direction=UP, buff=0.7)
-        text4.shift(LEFT)
+        i_label = MathTex(r"\hat{i}")
+        i_label.next_to(matrix, direction=UP, buff=0.7)
+        i_label.shift(LEFT)
 
-        arrow1 = CurvedArrow(text4.get_right()+0.2*DOWN,
-                             m1.get_columns()[0].get_top()+0.3*UP, angle=-PI/4, tip_length=0.2)
+        i_arrow = CurvedArrow(i_label.get_right()+0.2*DOWN,
+                              matrix.get_columns()[0].get_top()+0.3*UP, angle=-PI/4, tip_length=0.2)
 
-        text5 = MathTex(r"\hat{j}")
-        text5.next_to(m1, direction=UP, buff=0.5)
-        text5.shift(RIGHT)
+        j_label = MathTex(r"\hat{j}")
+        j_label.next_to(matrix, direction=UP, buff=0.5)
+        j_label.shift(RIGHT)
 
-        arrow2 = CurvedArrow(text5.get_left()+0.2*DOWN,
-                             m1.get_columns()[1].get_top()+0.3*UP, angle=PI/4, tip_length=0.2)
+        j_arrow = CurvedArrow(j_label.get_left()+0.2*DOWN,
+                              matrix.get_columns()[1].get_top()+0.3*UP, angle=PI/4, tip_length=0.2)
 
-        grid1 = Axes(
+        left_grid = Axes(
             x_range=[-0.8, 2, 1],
             y_range=[-0.8, 2, 1],
             x_length=2.8,
@@ -50,30 +50,22 @@ class Test(Scene):
         v1 = Vector([1, 0], tip_length=0.25)
         v2 = Vector([0, 1], tip_length=0.25)
         vGroup = VGroup(v1, v2)
-        grid1.add(vGroup)
-        grid1[2].set_color(ORANGE)
+        left_grid.add(vGroup)
+        left_grid[2].set_color(ORANGE)
 
-        arrow_text = MathTex(
+        transformation_label = MathTex(
             r"\overset{T}{\longleftrightarrow}", font_size=100)
 
-        grid2 = grid1.copy()
-        grid2[2].set_color(BLUE)
-        grid2[2].apply_matrix(rotation_matrix_45deg)
+        right_grid = left_grid.copy()
+        right_grid[2].set_color(BLUE)
+        right_grid[2].apply_matrix(rotation_matrix_45deg)
 
-        grid1[2].shift(grid1.get_origin())
-        grid2[2].shift(grid2.get_origin())
+        left_grid[2].shift(left_grid.get_origin())
+        right_grid[2].shift(right_grid.get_origin())
 
-        grid1.to_corner(LEFT+DOWN, buff=1.3)
-        arrow_text.next_to(grid1, buff=0.5, aligned_edge=UP)
-        grid2.next_to(arrow_text, buff=0.5, aligned_edge=UP)
+        left_grid.to_corner(LEFT+DOWN, buff=1.3)
+        transformation_label.next_to(left_grid, buff=0.5, aligned_edge=UP)
+        right_grid.next_to(transformation_label, buff=0.5, aligned_edge=UP)
 
-        self.add(text1, arrow_text, grid1, grid2, text2,
-                 m1, text3, text4, text5, arrow1, arrow2)
-
-        # circle = Circle()
-        # circle.set_fill(PINK, opacity=0.5)
-        # square = Square()
-        # self.play(Create(circle))
-        # self.play(Transform(circle, square))
-        # self.play(Rotate(square, angle=PI), run_time=2)
-        # self.play(FadeOut(square))
+        self.add(function_equation, transformation_label, left_grid, right_grid, matrix_equation,
+                 matrix, matrix_label, i_label, j_label, i_arrow, j_arrow)
