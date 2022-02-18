@@ -1,3 +1,4 @@
+from lib2to3.pgen2.token import RIGHTSHIFT
 from manim import *
 
 
@@ -29,10 +30,9 @@ class Slide(Scene):
         mathGroup = VGroup(
             # isolate Tex string into multiple subjects (so they can be treated separately)
             MathTex("A^2", "+", "B^2", "=", "C^2"),
-            # Tex("A^2", "=", "C^2", "-", "B^2"),
-            # Tex("$A^2 = (C + B)(C - B)$", isolate=["A^2", *to_isolate]),
-            # Tex("$A = \\sqrt{(C + B)(C - B)$}", isolate=["A", *to_isolate])
-        )
+            MathTex("A^2 = (C + B)(C - B)",
+                    substrings_to_isolate=["A^2", *to_isolate]),
+            MathTex("A = \\sqrt{(C + B)(C - B)}", substrings_to_isolate=["A", *to_isolate]))
         mathGroup.arrange(DOWN, buff=MED_SMALL_BUFF)
         for line in mathGroup:
             line.set_color_by_tex_to_color_map({
@@ -40,4 +40,5 @@ class Slide(Scene):
                 "B": TEAL,
                 "C": GREEN
             })
+        mathGroup.to_edge(RIGHT)
         self.add(mathGroup)
