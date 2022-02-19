@@ -19,5 +19,5 @@ class RotationAnimationSlide(ThreeDScene):
         self.wait()
         self.move_camera(theta=-45 * DEGREES, run_time=2)
         self.wait()
-        # self.begin_ambient_camera_rotation(rate=PI/4)
-        # self.wait(5)
+        self.begin_ambient_camera_rotation(rate=PI/4)
+        self.wait(5)
