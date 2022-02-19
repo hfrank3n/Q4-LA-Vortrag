@@ -203,3 +203,146 @@ class EinfacheTransformationenSlide(Scene):
 
         self.add(grid1, grid2, equation_matrix_mul,
                  other_equation, label_grid1, label_grid2)
+
+
+class ScaleAnimationSlide(LinearTransformationScene):
+    def __init__(self):
+        LinearTransformationScene.__init__(
+            self,
+            show_coordinates=True,
+            leave_ghost_vectors=True,
+            include_foreground_plane=False
+        )
+
+    def construct(self):
+        matrix = [[2, 0], [0, 2]]
+
+        matrix_label = Matrix(matrix)
+        matrix_label_T = MathTex("T=")
+        matrix_label_T.next_to(matrix_label, LEFT)
+
+        label = VGroup(matrix_label, matrix_label_T)
+        label.to_corner(UR, buff=1)
+        label.add_background_rectangle(BLACK, 0.5)
+        self.add(label)
+
+        self.apply_matrix(matrix)
+        self.wait()
+
+
+class ScaleFullAnimationSlide(LinearTransformationScene):
+    def __init__(self):
+        LinearTransformationScene.__init__(
+            self,
+            show_coordinates=True,
+            leave_ghost_vectors=True,
+        )
+
+    def construct(self):
+        matrix = [[2, 0], [0, 2]]
+
+        matrix_label = Matrix(matrix)
+        matrix_label_T = MathTex("T=")
+        matrix_label_T.next_to(matrix_label, LEFT)
+
+        label = VGroup(matrix_label, matrix_label_T)
+        label.to_corner(UR, buff=1)
+        label.add_background_rectangle(BLACK, 0.5)
+        self.add(label)
+
+        self.apply_matrix(matrix, run_time=5)
+        self.wait()
+
+
+class ShearAnimationSlide1(LinearTransformationScene):
+    def __init__(self):
+        LinearTransformationScene.__init__(
+            self,
+            show_coordinates=True,
+            leave_ghost_vectors=True,
+            include_foreground_plane=False
+        )
+
+    def construct(self):
+        matrix = [[1, 1], [0, 1]]
+
+        matrix_label = Matrix(matrix)
+        matrix_label_T = MathTex("T=")
+        matrix_label_T.next_to(matrix_label, LEFT)
+
+        label = VGroup(matrix_label, matrix_label_T)
+        label.to_corner(UR, buff=1)
+        label.add_background_rectangle(BLACK, 0.5)
+        self.add(label)
+
+
+class ShearAnimationSlide2(LinearTransformationScene):
+    def __init__(self):
+        LinearTransformationScene.__init__(
+            self,
+            show_coordinates=True,
+            leave_ghost_vectors=True,
+        )
+
+    def construct(self):
+        matrix = [[1, 1], [0, 1]]
+
+        matrix_label = Matrix(matrix)
+        matrix_label_T = MathTex("T=")
+        matrix_label_T.next_to(matrix_label, LEFT)
+
+        label = VGroup(matrix_label, matrix_label_T)
+        label.to_corner(UR, buff=1)
+        label.add_background_rectangle(BLACK, 0.5)
+        self.add(label)
+
+        self.apply_matrix(matrix)
+        self.wait()
+
+
+class ShearAnimationSlide3(LinearTransformationScene):
+    def __init__(self):
+        LinearTransformationScene.__init__(
+            self,
+            show_coordinates=True,
+            leave_ghost_vectors=True,
+        )
+
+    def construct(self):
+        matrix = [[1, 0], [1, 1]]
+
+        matrix_label = Matrix(matrix)
+        matrix_label_T = MathTex("T=")
+        matrix_label_T.next_to(matrix_label, LEFT)
+
+        label = VGroup(matrix_label, matrix_label_T)
+        label.to_corner(UR, buff=1)
+        label.add_background_rectangle(BLACK, 0.5)
+        self.add(label)
+
+        self.apply_matrix(matrix)
+        self.wait()
+
+
+class ShearAnimationSlide4(LinearTransformationScene):
+    def __init__(self):
+        LinearTransformationScene.__init__(
+            self,
+            show_coordinates=True,
+            leave_ghost_vectors=True,
+        )
+
+    def construct(self):
+        matrix = [[2, 1], [1, 2]]
+
+        matrix_label = Matrix(matrix)
+        matrix_label_T = MathTex("T=")
+        matrix_label_T.next_to(matrix_label, LEFT)
+
+        label = VGroup(matrix_label, matrix_label_T)
+        label.to_corner(UR, buff=1)
+        label.add_background_rectangle(BLACK, 0.5)
+        self.add(label)
+
+        self.apply_matrix(matrix)
+        self.wait()
