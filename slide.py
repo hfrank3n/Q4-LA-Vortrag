@@ -1,4 +1,3 @@
-from operator import eq
 from manim import *
 from numpy import *
 
@@ -425,6 +424,13 @@ class RotationSummarySlide(Scene):
 
 
 class RotationAnimationSlide(LinearTransformationScene):
+    def __init__(self):
+        LinearTransformationScene.__init__(
+            self,
+            show_coordinates=True,
+            leave_ghost_vectors=True,
+            include_foreground_plane=False
+        )
 
     def construct(self):
         matrix = [[0, 1], [-1, 0]]
@@ -437,6 +443,8 @@ class RotationAnimationSlide(LinearTransformationScene):
         matrix_label.add_background_rectangle(BLACK, 0.5)
 
         self.add(matrix_label)
+        self.apply_matrix(matrix)
+        self.wait()
 
 
 class RotationFullAnimationSlide(LinearTransformationScene):
