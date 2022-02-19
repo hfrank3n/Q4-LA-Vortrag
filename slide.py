@@ -189,8 +189,8 @@ class ShearSummarySlide(Scene):
 
         other_equation = MathTex(
             r"""\vec{v'} &= T \cdot \vec{v} \\ %
-                &= \begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix} \cdot \begin{bmatrix} 1 \\ -1 \end{bmatrix} \\ %
-                &= \begin{bmatrix} 1 \cdot 2 - 1 \cdot 0 \\ 1 \cdot 0 - 2 \end{bmatrix} = \begin{bmatrix} 2 \\ -2 \end{bmatrix}""",
+				&= \begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix} \cdot \begin{bmatrix} 1 \\ -1 \end{bmatrix} \\ %
+				&= \begin{bmatrix} 1 \cdot 2 - 1 \cdot 0 \\ 1 \cdot 0 - 2 \end{bmatrix} = \begin{bmatrix} 2 \\ -2 \end{bmatrix}""",
             color=BLUE, font_size=40)
 
         other_equation.next_to(equation_matrix_mul, DOWN)
