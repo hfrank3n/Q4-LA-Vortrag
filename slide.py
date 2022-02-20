@@ -468,3 +468,129 @@ class RotationFullAnimationSlide(LinearTransformationScene):
         self.add(matrix_label)
         self.apply_matrix(matrix)
         self.wait()
+
+
+class RotationUnitCircleSlide(LinearTransformationScene):
+    deg = 45
+    last_deg = 0
+    cos
+
+    def __init__(self):
+        LinearTransformationScene.__init__(
+            self,
+            show_coordinates=True,
+            leave_ghost_vectors=False
+        )
+
+    def construct(self):
+        matrix_label = MathTex(
+            r"T=\begin{bmatrix} cos(\alpha) & -sin(\alpha) \\ sin(\alpha) & cos(\alpha) \end{bmatrix}")
+        matrix_label.to_corner(UR, buff=1)
+        matrix_label.add_background_rectangle(BLACK, 0.5)
+        alpha = MathTex(r"\alpha=")
+        number = DecimalNumber()
+        alpha.next_to(number, LEFT)
+        label = VGroup(alpha, number)
+        label.next_to(matrix_label, DOWN)
+        label.add_background_rectangle(BLACK, 0.5)
+        number.add_updater(self.update_label)
+        self.add(alpha, label, matrix_label)
+
+        circle = self.get_circle()
+        self.add(circle)
+
+        i_hat = Arrow(start=circle.get_center(),
+                      end=circle.point_at_angle(0), color=GREEN)
+        i_hat.add_updater(self.update_i_hat)
+
+        self.cos = Line(start=circle.get_center(),
+                        end=circle.point_at_angle(0))
+        self.cos.add_updater(self.update_cos)
+
+        sin = Line(start=circle.get_center(),
+                   end=circle.point_at_angle(radians(90)))
+        sin.add_updater(self.update_sin)
+
+        self.add(self.cos)
+        self.add(sin)
+        self.add(i_hat)
+
+        for _ in range(8):
+            self.rotation(radians(self.deg))
+
+    def rotation(self, rad):
+        # rad = deg*(pi/180)
+        matrix = [[cos(rad), -sin(rad)], [sin(rad), cos(rad)]]
+        self.apply_matrix(matrix)
+        self.wait(duration=0.1)
+
+    def get_curr_deg(self):
+        i_hat = self.i_hat.get_end()[:2]
+        x_axis = [1, 0]
+
+        curr_deg = degrees(arccos(array(i_hat)@x_axis) /
+                           (linalg.norm(i_hat)*linalg.norm(x_axis)))
+
+        if (round(self.last_deg) >= 180) and not (round(self.last_deg) == 360):
+            curr_deg = 360 - curr_deg
+
+        self.last_deg = curr_deg
+        return curr_deg
+
+    def update_label(self, obj):
+        obj.set_value(self.get_curr_deg())
+
+    def update_i_hat(self, obj):
+        circle = self.get_circle()
+        obj.put_start_and_end_on(
+            circle.get_center(), circle.point_at_angle(radians(self.get_curr_deg())))
+
+    def update_cos(self, obj):
+        circle = self.get_circle()
+
+        start = circle.get_center()
+
+        deg = self.get_curr_deg()
+
+        angle = cos(radians(deg))
+        end = array(
+            [circle.get_x() + angle, circle.get_y(), 0])
+
+        if linalg.norm(start - end) == 0:
+            pass
+        else:
+            obj.put_start_and_end_on(start, end)
+
+    def update_sin(self, obj):
+        circle = self.get_circle()
+
+        start = self.cos.get_end()
+        end = array([self.cos.get_end()[0], circle.get_y() +
+                    sin(radians(self.get_curr_deg())), 0])
+
+        if linalg.norm(start - end) == 0:
+            pass
+        else:
+            obj.put_start_and_end_on(start, end)
+
+    def get_circle(self):
+        circle = Circle(radius=1)
+        circle.set_color(GRAY)
+        circle.set_fill(GRAY, 0.5)
+        circle.to_corner(RIGHT+DOWN)
+        return circle
+
+
+class UnitCircleSlide(Scene):
+    def construct(self):
+        circle = Circle(radius=2)
+        circle.set_color(GRAY)
+        circle.set_fill(GRAY, 0.5)
+        self.add(circle)
+
+        cos = Line(start=circle.get_center(), end=array([1.4, 0, 0]))
+        sin = Line(start=cos.get_end(), end=array([cos.get_end()[0], 1.4, 0]))
+
+        foo = Line(circle.get_center(), circle.point_at_angle(45 * DEGREES))
+
+        self.add(cos, sin, foo)
