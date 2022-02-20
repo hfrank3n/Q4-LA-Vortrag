@@ -5,6 +5,13 @@ from numpy import *
 class OrthogonalProjectionQuestion(Scene):
     def construct(self):
         matrix = Matrix([[1, 0, 0], [0, 1, 0], [0, 0, 0]])
+        colors = [
+            ["#77b05d", "#55c1a7"], ["#55c1a7", "#29abca"], ["#29ABCA", "#49A88F"],
+            ["#A6CF8C", "#FFEA94"], ["#F9B775", "#B189C6"], ["#1C758A", "#94424F"],
+            ["#F4D345", "#FFF1B6"], ["#e1a158", "#FF8080"], ["#A24D61", "#CF5044"]
+        ]
+        for k in range(len(colors)):
+            matrix.get_entries()[k].set_color(colors[k])
         self.add(matrix)
 
 
@@ -21,8 +28,8 @@ class OrthogonalProjectionSlide(ThreeDScene):
             }
         )
 
-        v1 = Vector([1, 0, 0], color=ORANGE, tip_length=0.25)
-        v2 = Vector([0, 1, 0], color=ORANGE, tip_length=0.25)
+        v1 = Vector([1, 0, 0], color=GREEN, tip_length=0.25)
+        v2 = Vector([0, 1, 0], color=BLUE, tip_length=0.25)
         v3 = Vector([0, 0, 1], color=ORANGE, tip_length=0.25)
 
         vGroup = VGroup(v1, v2, v3)
@@ -129,9 +136,10 @@ class OrthogonalProjectionSlideFull1(ThreeDScene):
         # self.stop_ambient_camera_rotation()
 
         self.stop_ambient_camera_rotation()
+        # self.move_camera(phi=0, theta=-90 * DEGREES, run_time=3)
+        self.play(house.animate.apply_matrix(matrix), run_time=3)
         self.move_camera(phi=0, theta=-90 * DEGREES, run_time=3)
-        # self.move_camera(phi=0, theta=-90 * DEGREES, added_anims=[vGroup.animate.apply_matrix(matrix)], run_time=3)
-        # self.wait(2)
+        self.wait(2)
 
 
 class OrthogonalProjectionSlideFull2(ThreeDScene):
@@ -146,6 +154,7 @@ class OrthogonalProjectionSlideFull2(ThreeDScene):
                 "include_numbers": True
             }
         )
+        self.camera.set_focal_distance(40)
 
         matrix_label = Matrix(matrix)
         matrix_label_T = MathTex("T=")
@@ -158,7 +167,7 @@ class OrthogonalProjectionSlideFull2(ThreeDScene):
         label.to_corner(UR, buff=1)
 
         house = Cube(side_length=1.5)
-        house.shift([0.75, 0.75, 3])
+        house.shift([0.75, 0.75, 2])
 
         self.add(axes, house)
         self.set_camera_orientation(phi=0, theta=-90 * DEGREES)
@@ -168,7 +177,7 @@ class OrthogonalProjectionSlideFull2(ThreeDScene):
         self.move_camera(phi=60 * DEGREES, theta=30 * DEGREES, run_time=3)
 
         self.begin_ambient_camera_rotation(rate=PI/8)
-        self.wait()
+        self.wait(16)
         self.stop_ambient_camera_rotation()
 
 
@@ -190,7 +199,7 @@ class WeakPerspectiveProjection(ThreeDScene):
         matrix_label_T.next_to(matrix_label, LEFT)
 
         house = Cube(side_length=1.5)
-        house.shift([0.75, 0.75, 3])
+        house.shift([0.75, 0.75, 2])
 
         self.add(axes, house)
         self.set_camera_orientation(
@@ -212,7 +221,6 @@ class WeakPerspectiveProjection(ThreeDScene):
         square2.add_background_rectangle(DARK_BLUE, opacity=0.8)
         squares = VGroup(square1, square2)
 
-        self.begin_ambient_camera_rotation(rate=PI/8)
         self.move_camera(phi=0, theta=-90 * DEGREES,
                          added_anims=[ReplacementTransform(house, squares), GrowFromEdge(line, DL)], run_time=3)
 
@@ -224,9 +232,9 @@ class PerspectiveProjection(ThreeDScene):
 
     def construct(self):
         matrix = [[1, 0, 0], [0, 1, 0], [0, 0, 0]]
-        cam_deg = DecimalNumber()
-        cam_deg.add_updater(self.updateNumber)
-        self.add(cam_deg)
+        # cam_deg = DecimalNumber()
+        # cam_deg.add_updater(self.updateNumber)
+        # self.add(cam_deg)
 
         axes = ThreeDAxes(
             x_range=[-5, 5, 1],
@@ -250,6 +258,35 @@ class PerspectiveProjection(ThreeDScene):
         house = Cube(side_length=1.5)
         house.shift([0.75, 0.75, 3])
 
+        cam_deg = self.camera.get_theta()
+
+        x_rotation = [
+            [1, 0, 0],
+            [0, cos(cam_deg), sin(cam_deg)],
+            [0, -sin(cam_deg), cos(cam_deg)]
+        ]
+        y_rotation = [
+            [cos(cam_deg), 0, -sin(cam_deg)],
+            [0, 1, 0],
+            [sin(cam_deg), 0, cos(cam_deg)]
+        ]
+        z_rotation = [
+            [cos(cam_deg), sin(cam_deg), 0],
+            [-sin(cam_deg), cos(cam_deg), 0],
+            [0, 0, 1]
+        ]
+
+        rotation_complete = matmul(x_rotation, matmul(y_rotation, z_rotation))
+        x = 2.5 * np.sin(self.camera.get_phi()) * \
+            np.cos(self.camera.get_theta())
+        y = 2.5 * np.sin(self.camera.get_phi()) * \
+            np.sin(self.camera.get_theta())
+        z = 2.5 * np.cos(self.camera.get_phi())
+        c = [x, y, z]
+        # print(d)
+        e = [3, 3, 3.5]
+        new_points = []
+
         self.add(axes, house)
         self.set_camera_orientation(phi=0, theta=-90 * DEGREES)
 
@@ -257,48 +294,72 @@ class PerspectiveProjection(ThreeDScene):
 
         self.move_camera(phi=60 * DEGREES, theta=30 * DEGREES, run_time=3)
 
+        points = [[0, 0, 1.5], [1.5, 0, 1.5], [1.5, 1.5, 1.5], [
+            0, 1.5, 1.5], [0, 0, 3], [1.5, 0, 3], [1.5, 1.5, 3], [0, 1.5, 3]]
+        for a in points:
+            d = matmul(self.camera.get_rotation_matrix(),
+                       np.array(a)-np.array(c))
+            vf = matmul(
+                np.array([[1, 0, e[0]/e[2]], [0, 1, e[1]/e[2]], [0, 0, 1/e[2]]]), d)
+            b = [vf[0]/vf[2], vf[1]/vf[2], 0]
+            new_points.append(b)
+            print(b)
+
+        square1 = Square().set_points_as_corners(new_points[:5])
+        square1.add_background_rectangle(BLUE, opacity=0.5)
+
+        # line = Line(start=new_points[2], end=new_points[6])
+
+        square2 = Square().set_points_as_corners(new_points[5:])
+        square2.add_background_rectangle(DARK_BLUE, opacity=0.8)
+        squares = VGroup(square1, square2)
+
+        self.add(squares)
+
+        # self.set_camera_orientation(phi=0, theta=-90, zoom=1)
+        # self.wait(4)
+
         self.begin_ambient_camera_rotation(rate=PI/8)
         self.wait()
         self.stop_ambient_camera_rotation()
         self.wait(2)
 
-    def updateNumber(self, obj):
-        obj.set_value(self.camera.get_theta() / DEGREES)
-        x_rotation = [
-            [1, 0, 0],
-            [0, cos(obj.get_value() * DEGREES), -
-             sin(obj.get_value() * DEGREES)],
-            [0, sin(obj.get_value() * DEGREES),
-             cos(obj.get_value() * DEGREES)]
-        ]
-        y_rotation = [
-            [cos(obj.get_value() * DEGREES), 0,
-             sin(obj.get_value() * DEGREES)],
-            [0, 1, 0],
-            [-sin(obj.get_value() * DEGREES), 0,
-             cos(obj.get_value() * DEGREES)]
-        ]
-        z_rotation = [
-            [cos(obj.get_value() * DEGREES), -
-             sin(obj.get_value() * DEGREES), 0],
-            [sin(obj.get_value() * DEGREES),
-             cos(obj.get_value() * DEGREES), 0],
-            [0, 0, 1]
-        ]
+    # def updateNumber(self, obj):
+    #     obj.set_value(self.camera.get_theta() / DEGREES)
+    #     x_rotation = [
+    #         [1, 0, 0],
+    #         [0, cos(obj.get_value() * DEGREES), -
+    #          sin(obj.get_value() * DEGREES)],
+    #         [0, sin(obj.get_value() * DEGREES),
+    #          cos(obj.get_value() * DEGREES)]
+    #     ]
+    #     y_rotation = [
+    #         [cos(obj.get_value() * DEGREES), 0,
+    #          sin(obj.get_value() * DEGREES)],
+    #         [0, 1, 0],
+    #         [-sin(obj.get_value() * DEGREES), 0,
+    #          cos(obj.get_value() * DEGREES)]
+    #     ]
+    #     z_rotation = [
+    #         [cos(obj.get_value() * DEGREES), -
+    #          sin(obj.get_value() * DEGREES), 0],
+    #         [sin(obj.get_value() * DEGREES),
+    #          cos(obj.get_value() * DEGREES), 0],
+    #         [0, 0, 1]
+    #     ]
 
-        rotation_complete = matmul(x_rotation, matmul(y_rotation, z_rotation))
-        a = [1, 2, 1]
-        x = self.camera.get_focal_distance() * np.sin(self.camera.get_phi()) * \
-            np.cos(self.camera.get_theta())
-        y = self.camera.get_focal_distance() * np.sin(self.camera.get_phi()) * \
-            np.sin(self.camera.get_theta())
-        z = self.camera.get_focal_distance() * np.cos(self.camera.get_phi())
-        c = [x, y, z]
-        d = matmul(rotation_complete, np.array(a)-np.array(c))
-        # print(d)
-        vf = matmul(np.array([[1, 0, 1], [0, 1, 1], [0, 0, 1]]), d)
-        b = [vf[0]/vf[2], vf[1]/vf[2], 0]
-        self.remove(self.foo)
-        self.wait()
-        self.foo = Vector(b)
-        self.add(self.foo)
+    #     rotation_complete = matmul(x_rotation, matmul(y_rotation, z_rotation))
+    #     a = [1, 2, 1]
+    #     x = self.camera.get_focal_distance() * np.sin(self.camera.get_phi()) * \
+    #         np.cos(self.camera.get_theta())
+    #     y = self.camera.get_focal_distance() * np.sin(self.camera.get_phi()) * \
+    #         np.sin(self.camera.get_theta())
+    #     z = self.camera.get_focal_distance() * np.cos(self.camera.get_phi())
+    #     c = [x, y, z]
+    #     d = matmul(rotation_complete, np.array(a)-np.array(c))
+    #     # print(d)
+    #     vf = matmul(np.array([[1, 0, 1], [0, 1, 1], [0, 0, 1]]), d)
+    #     b = [vf[0]/vf[2], vf[1]/vf[2], 0]
+    #     self.remove(self.foo)
+    #     self.foo = Vector(b)
+    #     self.add(self.foo)

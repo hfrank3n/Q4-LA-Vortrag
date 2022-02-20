@@ -15,13 +15,14 @@ class ShearAnimationSlide(ThreeDScene):
             }
         )
 
-        v1 = Vector([1, 0, 0], color=ORANGE, tip_length=0.25)
-        v2 = Vector([0, 1, 0], color=ORANGE, tip_length=0.25)
+        v1 = Vector([1, 0, 0], color=GREEN, tip_length=0.25)
+        v2 = Vector([0, 1, 0], color=BLUE, tip_length=0.25)
         v3 = Vector([0, 0, 1], color=ORANGE, tip_length=0.25)
 
         vGroup = VGroup(v1, v2, v3)
 
         matrix_label = Matrix(matrix)
+        matrix_label.set_column_colors(GREEN, BLUE, ORANGE)
         matrix_label_T = MathTex("T=")
         matrix_label_T.next_to(matrix_label, LEFT)
 
@@ -101,8 +102,8 @@ class RotationAnimationSlide(ThreeDScene):
             }
         )
 
-        v1 = Vector([1, 0, 0], color=ORANGE, tip_length=0.25)
-        v2 = Vector([0, 1, 0], color=ORANGE, tip_length=0.25)
+        v1 = Vector([1, 0, 0], color=GREEN, tip_length=0.25)
+        v2 = Vector([0, 1, 0], color=BLUE, tip_length=0.25)
         v3 = Vector([0, 0, 1], color=ORANGE, tip_length=0.25)
 
         vGroup = VGroup(v1, v2, v3)
@@ -122,9 +123,8 @@ class RotationAnimationSlide(ThreeDScene):
         z_label.scale(0.8)
 
         self.add(axes, vGroup)
+        self.set_camera_orientation(phi=60 * DEGREES, theta=30 * DEGREES)
         self.wait(2)
-        self.move_camera(phi=60 * DEGREES, theta=30 * DEGREES, run_time=2)
-        self.wait()
 
         self.add_fixed_in_frame_mobjects(y_label)
         y_label.to_corner(UR, buff=1)
@@ -142,4 +142,4 @@ class RotationAnimationSlide(ThreeDScene):
 
         self.play(vGroup.animate.apply_matrix(z_rotation), run_time=3)
         self.play(vGroup.animate.apply_matrix(z_rotation), run_time=3)
-        self.wait()
+        self.wait(3)

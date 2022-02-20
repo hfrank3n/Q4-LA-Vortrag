@@ -44,6 +44,17 @@ class Slide(Scene):
         self.add(mathGroup)
 
 
+class TitlePage(Scene):
+    def construct(self):
+        title = Text("Lineare Transformationen",
+                     gradient=(GREEN, BLUE), font_size=80)
+        self.play(Write(title))
+        names = Text("Daniel Dietzler und Hannah Franken",
+                     font_size=20).to_corner(DL)
+        self.play(AddTextLetterByLetter(names))
+        self.wait(4)
+
+
 class LineareTransformationenSlide(Scene):
     def construct(self):
         text1 = Tex("Lineare ", font_size=50)
@@ -105,8 +116,13 @@ class LineareTransformationenSlide(Scene):
         matrix.next_to(matrix_equation, direction=DOWN, buff=2)
         matrix.to_edge(RIGHT, buff=1)
 
-        self.add(text, brace, function_equation, matrix_equation)
-        self.add(left_grid, right_grid, transformation_label, matrix)
+        self.add(text)
+        self.add(brace, function_equation)
+        self.add(left_grid)
+        self.add(right_grid)
+        self.add(transformation_label)
+        self.add(matrix)
+        self.add(matrix_equation)
 
 
 class MatrixMultiplication(Scene):
@@ -116,6 +132,7 @@ class MatrixMultiplication(Scene):
         general_equation.to_corner(LEFT + UP, buff=1.0)
 
         matrix = Matrix([["i_1", "j_1"], ["i_2", "j_2"]])
+        matrix.set_column_colors(GREEN, BLUE)
         dot = MathTex(r"\cdot")
         vector = MobjectMatrix([MathTex("x_1"), MathTex("x_2")])
         eq = MathTex("=")
@@ -133,19 +150,15 @@ class MatrixMultiplication(Scene):
 
         tmp3 = MathTex("=")
         result_vector = MobjectMatrix([
-            MathTex(
-                r"{{ i_1 }}\cdot {{x_1}}+{{j_1}}\cdot {{x_2}}"),
-            MathTex(r"{{ i_2 }} \cdot {{x_1}} + {{ j_2 }}\cdot {{x_2}}"),
-        ])
+            MathTex(r"{{i_1}} \cdot x_1 + {{j_1}} \cdot x_2"),
+            MathTex(r"{{i_2}} \cdot x_1 + {{j_2}} \cdot x_2")])
         for list in result_vector:
             for mobj in list.submobjects[0:-1]:
-                print(mobj.get_tex_string())
-                if (mobj.get_tex_string() == " i_1 " or mobj.get_tex_string() == " i_2 "):
+                if (mobj.get_tex_string() == "i_1" or mobj.get_tex_string() == "i_2"):
                     mobj.set_color(GREEN)
-                if (mobj.get_tex_string() == " j_1 " or mobj.get_tex_string() == " j_2 "):
+                if (mobj.get_tex_string() == "j_1" or mobj.get_tex_string() == "j_2"):
                     mobj.set_color(BLUE)
-                if mobj == "j_1":
-                    mobj.set_color(BLUE)
+
         matrix.next_to(general_equation, DOWN, buff=1)
         dot.next_to(matrix)
         vector.next_to(dot)
@@ -159,7 +172,9 @@ class MatrixMultiplication(Scene):
 
         equation = VGroup(matrix, dot, vector, eq, result_equation, result)
 
-        self.add(general_equation, equation, result)
+        self.add(general_equation)
+        self.add(equation)
+        self.add(result)
 
         # self.wait()
         # self.play(matrix.animate.to_corner(UL, buff=1), FadeOut(matrix_text))
@@ -190,18 +205,18 @@ class ShearSummarySlide(Scene):
             tips=True,
         )
 
-        v1 = Vector([1, 0], tip_length=0.25, color=ORANGE)
-        v1_label = v1.coordinate_label()
+        v1 = Vector([1, 0], tip_length=0.25, color=GREEN)
+        v1_label = v1.coordinate_label(color=GREEN)
         v1_label.scale(0.5)
         v1_label.next_to(v1.get_end(), UP + RIGHT)
 
-        v2 = Vector([0, 1], tip_length=0.25, color=ORANGE)
-        v2_label = v2.coordinate_label()
+        v2 = Vector([0, 1], tip_length=0.25, color=BLUE)
+        v2_label = v2.coordinate_label(color=BLUE)
         v2_label.scale(0.5)
         v2_label.next_to(v2.get_end(), RIGHT, buff=MED_SMALL_BUFF)
 
-        v3 = Vector([1, -1], tip_length=0.25, color=BLUE)
-        v3_label = v3.coordinate_label(color=BLUE)
+        v3 = Vector([1, -1], tip_length=0.25, color=ORANGE)
+        v3_label = v3.coordinate_label(color=ORANGE)
         v3_label.scale(0.5)
         v3_label.next_to(v3.get_end(), RIGHT)
 
@@ -223,18 +238,18 @@ class ShearSummarySlide(Scene):
             tips=True,
         )
 
-        v4 = Vector([2, 0], tip_length=0.25, color=ORANGE)
-        v4_label = v4.coordinate_label()
+        v4 = Vector([2, 0], tip_length=0.25, color=GREEN)
+        v4_label = v4.coordinate_label(color=GREEN)
         v4_label.scale(0.5)
         v4_label.next_to(v4.get_end(), UP)
 
-        v5 = Vector([0, 2], tip_length=0.25, color=ORANGE)
-        v5_label = v5.coordinate_label()
+        v5 = Vector([0, 2], tip_length=0.25, color=BLUE)
+        v5_label = v5.coordinate_label(color=BLUE)
         v5_label.scale(0.5)
         v5_label.next_to(v5.get_end(), RIGHT)
 
-        v6 = Vector([2, -2], tip_length=0.25, color=BLUE)
-        v6_label = v6.coordinate_label(color=BLUE)
+        v6 = Vector([2, -2], tip_length=0.25, color=ORANGE)
+        v6_label = v6.coordinate_label(color=ORANGE)
         v6_label.scale(0.5)
         v6_label.next_to(v6.get_end(), UP + RIGHT)
 
@@ -256,7 +271,7 @@ class ShearSummarySlide(Scene):
             r"""\vec{v'} &= T \cdot \vec{v} \\ %
 				&= \begin{bmatrix} 2 & 0 \\ 0 & 2 \end{bmatrix} \cdot \begin{bmatrix} 1 \\ -1 \end{bmatrix} \\ %
 				&= \begin{bmatrix} 1 \cdot 2 - 1 \cdot 0 \\ 1 \cdot 0 - 2 \end{bmatrix} = \begin{bmatrix} 2 \\ -2 \end{bmatrix}""",
-            color=BLUE, font_size=40)
+            color=ORANGE, font_size=40)
 
         other_equation.next_to(equation_matrix_mul, DOWN)
 
@@ -265,8 +280,10 @@ class ShearSummarySlide(Scene):
         label_grid2 = grid2.get_axis_labels(
             Tex("x").scale(0.7), Tex("y").scale(0.7))
 
-        self.add(grid1, grid2, equation_matrix_mul,
-                 other_equation, label_grid1, label_grid2)
+        self.add(grid1, label_grid1)
+        self.add(grid2, label_grid2)
+        self.add(equation_matrix_mul)
+        self.add(other_equation)
 
 
 class ScaleAnimationSlide(LinearTransformationScene):
@@ -275,7 +292,9 @@ class ScaleAnimationSlide(LinearTransformationScene):
             self,
             show_coordinates=True,
             leave_ghost_vectors=True,
-            include_foreground_plane=False
+            include_foreground_plane=False,
+            i_hat_color=GREEN,
+            j_hat_color=BLUE
         )
 
     def construct(self):
@@ -300,6 +319,8 @@ class ScaleFullAnimationSlide(LinearTransformationScene):
             self,
             show_coordinates=True,
             leave_ghost_vectors=True,
+            i_hat_color=GREEN,
+            j_hat_color=BLUE
         )
 
     def construct(self):
@@ -324,7 +345,9 @@ class ShearAnimationSlide1(LinearTransformationScene):
             self,
             show_coordinates=True,
             leave_ghost_vectors=True,
-            include_foreground_plane=False
+            include_foreground_plane=False,
+            i_hat_color=GREEN,
+            j_hat_color=BLUE
         )
 
     def construct(self):
@@ -346,6 +369,8 @@ class ShearAnimationSlide2(LinearTransformationScene):
             self,
             show_coordinates=True,
             leave_ghost_vectors=True,
+            i_hat_color=GREEN,
+            j_hat_color=BLUE
         )
 
     def construct(self):
@@ -370,7 +395,8 @@ class ShearAnimationSlide3(LinearTransformationScene):
             self,
             show_coordinates=True,
             leave_ghost_vectors=True,
-            include_foreground_plane=False
+            i_hat_color=GREEN,
+            j_hat_color=BLUE
         )
 
     def construct(self):
@@ -394,6 +420,8 @@ class ShearAnimationSlide4(LinearTransformationScene):
             self,
             show_coordinates=True,
             leave_ghost_vectors=True,
+            i_hat_color=GREEN,
+            j_hat_color=BLUE
         )
 
     def construct(self):
@@ -426,13 +454,13 @@ class RotationSummarySlide(Scene):
             tips=True,
         )
 
-        v1 = Vector([1, 0], tip_length=0.25, color=ORANGE)
-        v1_label = v1.coordinate_label()
+        v1 = Vector([1, 0], tip_length=0.25, color=GREEN)
+        v1_label = v1.coordinate_label(color=GREEN)
         v1_label.scale(0.5)
         v1_label.next_to(v1.get_end(), UP + RIGHT)
 
-        v2 = Vector([0, 1], tip_length=0.25, color=ORANGE)
-        v2_label = v2.coordinate_label()
+        v2 = Vector([0, 1], tip_length=0.25, color=BLUE)
+        v2_label = v2.coordinate_label(color=BLUE)
         v2_label.scale(0.5)
         v2_label.next_to(v2.get_end(), RIGHT, buff=MED_SMALL_BUFF)
 
@@ -454,13 +482,13 @@ class RotationSummarySlide(Scene):
             tips=True,
         )
 
-        v4 = Vector([0, -1], tip_length=0.25, color=ORANGE)
-        v4_label = v4.coordinate_label()
+        v4 = Vector([0, -1], tip_length=0.25, color=GREEN)
+        v4_label = v4.coordinate_label(color=GREEN)
         v4_label.scale(0.5)
         v4_label.next_to(v4.get_end(), RIGHT)
 
-        v5 = Vector([1, 0], tip_length=0.25, color=ORANGE)
-        v5_label = v5.coordinate_label()
+        v5 = Vector([1, 0], tip_length=0.25, color=BLUE)
+        v5_label = v5.coordinate_label(color=BLUE)
         v5_label.scale(0.5)
         v5_label.next_to(v5.get_end(), UP)
 
@@ -484,8 +512,8 @@ class RotationSummarySlide(Scene):
         label_grid2 = grid2.get_axis_labels(
             Tex("x").scale(0.7), Tex("y").scale(0.7))
 
-        self.add(grid1, grid2, matrix,
-                 label_grid1, label_grid2)
+        self.add(grid1, label_grid1)
+        self.add(grid2, label_grid2, matrix)
 
 
 class RotationAnimationSlide(LinearTransformationScene):
@@ -494,7 +522,9 @@ class RotationAnimationSlide(LinearTransformationScene):
             self,
             show_coordinates=True,
             leave_ghost_vectors=True,
-            include_foreground_plane=False
+            include_foreground_plane=False,
+            i_hat_color=GREEN,
+            j_hat_color=BLUE
         )
 
     def construct(self):
@@ -518,6 +548,8 @@ class RotationFullAnimationSlide(LinearTransformationScene):
             self,
             show_coordinates=True,
             leave_ghost_vectors=True,
+            i_hat_color=GREEN,
+            j_hat_color=BLUE
         )
 
     def construct(self):
@@ -544,20 +576,22 @@ class RotationUnitCircleSlide(LinearTransformationScene):
         LinearTransformationScene.__init__(
             self,
             show_coordinates=True,
-            leave_ghost_vectors=False
+            leave_ghost_vectors=False,
+            i_hat_color=GREEN,
+            j_hat_color=BLUE
         )
 
     def construct(self):
         matrix_label = MathTex(
             r"T=\begin{bmatrix} cos(\alpha) & -sin(\alpha) \\ sin(\alpha) & cos(\alpha) \end{bmatrix}")
         matrix_label.to_corner(UR, buff=1)
-        matrix_label.add_background_rectangle(BLACK, 0.5)
+        matrix_label.add_background_rectangle(BLACK, 0.7)
         alpha = MathTex(r"\alpha=")
         number = DecimalNumber()
         alpha.next_to(number, LEFT)
         label = VGroup(alpha, number)
         label.next_to(matrix_label, DOWN)
-        label.add_background_rectangle(BLACK, 0.5)
+        label.add_background_rectangle(BLACK, 0.7)
         number.add_updater(self.update_label)
         self.add(alpha, label, matrix_label)
 
@@ -631,7 +665,7 @@ class RotationUnitCircleSlide(LinearTransformationScene):
 
         start = self.cos.get_end()
         end = array([self.cos.get_end()[0], circle.get_y() +
-                    sin(radians(self.get_curr_deg())), 0])
+                     sin(radians(self.get_curr_deg())), 0])
 
         if linalg.norm(start - end) == 0:
             pass
@@ -654,8 +688,12 @@ class UnitCircleSlide(Scene):
         self.add(circle)
 
         cos = Line(start=circle.get_center(), end=array([1.4, 0, 0]))
+        brace_cos = BraceLabel(Line([0, 0, 0], [2, 0, 0]), "cos")
         sin = Line(start=cos.get_end(), end=array([cos.get_end()[0], 1.4, 0]))
+        brace_sin = BraceLabel(
+            Line([0, 0, 0], [0, 2, 0]), "sin", LEFT)
 
-        foo = Line(circle.get_center(), circle.point_at_angle(45 * DEGREES))
+        foo = Line(circle.get_center(), circle.point_at_angle(
+            45 * DEGREES), color=GREEN)
 
-        self.add(cos, sin, foo)
+        self.add(cos, sin, foo, brace_cos, brace_sin)
