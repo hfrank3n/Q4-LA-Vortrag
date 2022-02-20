@@ -80,7 +80,7 @@ class RotationAnimationSlide(ThreeDScene):
         ], h_buff=1.8)
         y_rotation_matrix_body.get_columns()[1].shift(LEFT)
         y_rotation_matrix_body.get_columns()[2].shift(0.6*LEFT)
-        y_rotation_matrix_body.get_brackets()[1].shift(0.8*LEFT)
+        y_rotation_matrix_body.get_brackets()[1].shift(0.6*LEFT)
 
         z_rotation_matrix_body = MobjectMatrix([
             [MathTex("cos(", z_deg, ")"), MathTex(
