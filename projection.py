@@ -33,7 +33,12 @@ class OrthogonalProjectionSlide(ThreeDScene):
 
         self.add(axes, vGroup)
         self.set_camera_orientation(phi=60 * DEGREES, theta=30 * DEGREES)
-        self.begin_ambient_camera_rotation(rate=PI/8, about="phi")
-        self.wait()
+        self.begin_ambient_camera_rotation(rate=PI/8)
+        self.wait(5)
+        # self.stop_ambient_camera_rotation()
+
         self.play(vGroup.animate.apply_matrix(matrix), run_time=3)
+        self.stop_ambient_camera_rotation()
+        self.move_camera(phi=0, theta=-90 * DEGREES, run_time=3)
+        # self.move_camera(phi=0, theta=-90 * DEGREES, added_anims=[vGroup.animate.apply_matrix(matrix)], run_time=3)
         self.wait(2)
