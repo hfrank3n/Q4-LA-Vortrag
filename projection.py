@@ -96,7 +96,7 @@ class OrthogonalProjectionSummary(Scene):
         self.wait()
 
 
-class OrthogonalProjectionSlideFull(ThreeDScene):
+class OrthogonalProjectionSlideFull1(ThreeDScene):
     def construct(self):
         matrix = [[1, 0, 0], [0, 1, 0], [0, 0, 0]]
 
@@ -132,3 +132,41 @@ class OrthogonalProjectionSlideFull(ThreeDScene):
         self.move_camera(phi=0, theta=-90 * DEGREES, run_time=3)
         # self.move_camera(phi=0, theta=-90 * DEGREES, added_anims=[vGroup.animate.apply_matrix(matrix)], run_time=3)
         # self.wait(2)
+
+
+class OrthogonalProjectionSlideFull2(ThreeDScene):
+    def construct(self):
+        matrix = [[1, 0, 0], [0, 1, 0], [0, 0, 0]]
+
+        axes = ThreeDAxes(
+            x_range=[-5, 5, 1],
+            y_range=[-5, 5, 1],
+            z_range=[-3, 3, 1],
+            axis_config={
+                "include_numbers": True
+            }
+        )
+
+        matrix_label = Matrix(matrix)
+        matrix_label_T = MathTex("T=")
+        matrix_label_T.next_to(matrix_label, LEFT)
+
+        label = VGroup(matrix_label, matrix_label_T)
+        label.add_background_rectangle(BLACK, 0.5)
+        label.scale(0.8)
+        self.add_fixed_in_frame_mobjects(label)
+        label.to_corner(UR, buff=1)
+
+        house = Cube(side_length=1.5)
+        house.shift([0.75, 0.75, 3])
+
+        self.add(axes, house)
+        self.set_camera_orientation(phi=0, theta=-90 * DEGREES)
+
+        self.wait(2)
+
+        self.move_camera(phi=60 * DEGREES, theta=30 * DEGREES, run_time=3)
+
+        self.begin_ambient_camera_rotation(rate=PI/8)
+        self.wait()
+        self.stop_ambient_camera_rotation()
