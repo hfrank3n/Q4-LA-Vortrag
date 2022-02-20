@@ -170,3 +170,35 @@ class OrthogonalProjectionSlideFull2(ThreeDScene):
         self.begin_ambient_camera_rotation(rate=PI/8)
         self.wait()
         self.stop_ambient_camera_rotation()
+
+
+class WeakPerspectiveProjection(ThreeDScene):
+    def construct(self):
+        matrix = [[1, 0, 0], [0, 1, 0], [0, 0, 0]]
+
+        axes = ThreeDAxes(
+            x_range=[-5, 5, 1],
+            y_range=[-5, 5, 1],
+            z_range=[-3, 3, 1],
+            axis_config={
+                "include_numbers": True
+            }
+        )
+
+        matrix_label = Matrix(matrix)
+        matrix_label_T = MathTex("T=")
+        matrix_label_T.next_to(matrix_label, LEFT)
+
+        house = Cube(side_length=1.5)
+        house.shift([0.75, 0.75, 3])
+
+        self.add(axes, house)
+        self.set_camera_orientation(
+            phi=60 * DEGREES, theta=30 * DEGREES, run_time=3)
+
+        points = [[0, 0, 1.5], [1.5, 0, 1.5], [1.5, 1.5, 1.5], [
+            0, 1.5, 3], [0, 0, 3], [1.5, 0, 3], [1.5, 1.5, 3], [0, 1.5, 3]]
+        new_points = []
+        for point in points:
+            new_points.append(np.array(point) * (1/point[2]))
+        print(new_points)
