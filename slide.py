@@ -76,11 +76,10 @@ class LineareTransformationenSlide(Scene):
             tips=True,
         )
 
-        v1 = Vector([1, 0], tip_length=0.25)
-        v2 = Vector([0, 1], tip_length=0.25)
+        v1 = Vector([1, 0], tip_length=0.25, color=GREEN)
+        v2 = Vector([0, 1], tip_length=0.25, color=BLUE)
         vGroup = VGroup(v1, v2)
         left_grid.add(vGroup)
-        left_grid[2].set_color(ORANGE)
 
         transformation_arrow = MathTex(r"\longleftrightarrow", font_size=80)
         transformation_text = Tex("T")
@@ -89,7 +88,6 @@ class LineareTransformationenSlide(Scene):
             transformation_arrow, transformation_text)
 
         right_grid = left_grid.copy()
-        right_grid[2].set_color(BLUE)
         right_grid[2].apply_matrix(rotation_matrix_45deg)
 
         left_grid[2].shift(left_grid.get_origin())
@@ -100,6 +98,7 @@ class LineareTransformationenSlide(Scene):
         right_grid.next_to(transformation_label, buff=1, aligned_edge=LEFT)
 
         matrix_body = Matrix([["i_1", "j_1"], ["i_2", "j_2"]], h_buff=1.0)
+        matrix_body.set_column_colors(GREEN, BLUE)
         matrix_label = MathTex(r"T =")
         matrix_label.next_to(matrix_body, direction=LEFT)
         matrix = VGroup(matrix_body, matrix_label)
@@ -108,6 +107,72 @@ class LineareTransformationenSlide(Scene):
 
         self.add(text, brace, function_equation, matrix_equation)
         self.add(left_grid, right_grid, transformation_label, matrix)
+
+
+class MatrixMultiplication(Scene):
+    def construct(self):
+
+        general_equation = MathTex(r"T\cdot\vec{v_1}=\vec{v_2}")
+        general_equation.to_corner(LEFT + UP, buff=1.0)
+
+        matrix = Matrix([["i_1", "j_1"], ["i_2", "j_2"]])
+        dot = MathTex(r"\cdot")
+        vector = MobjectMatrix([MathTex("x_1"), MathTex("x_2")])
+        eq = MathTex("=")
+
+        i_vec = MobjectMatrix([MathTex("i_1"), MathTex("i_2")])
+        j_vec = MobjectMatrix([MathTex("j_1"), MathTex("j_2")])
+        i_vec.set_column_colors(GREEN)
+        j_vec.set_column_colors(BLUE)
+        tmp1 = MathTex(r"x_1")
+        tmp2 = MathTex(r"+\,\, x_2")
+        i_vec.next_to(tmp1)
+        tmp2.next_to(i_vec)
+        j_vec.next_to(tmp2)
+        result_equation = VGroup(i_vec, tmp1, j_vec, tmp2)
+
+        tmp3 = MathTex("=")
+        result_vector = MobjectMatrix([
+            MathTex(
+                r"{{ i_1 }}\cdot {{x_1}}+{{j_1}}\cdot {{x_2}}"),
+            MathTex(r"{{ i_2 }} \cdot {{x_1}} + {{ j_2 }}\cdot {{x_2}}"),
+        ])
+        for list in result_vector:
+            for mobj in list.submobjects[0:-1]:
+                print(mobj.get_tex_string())
+                if (mobj.get_tex_string() == " i_1 " or mobj.get_tex_string() == " i_2 "):
+                    mobj.set_color(GREEN)
+                if (mobj.get_tex_string() == " j_1 " or mobj.get_tex_string() == " j_2 "):
+                    mobj.set_color(BLUE)
+                if mobj == "j_1":
+                    mobj.set_color(BLUE)
+        matrix.next_to(general_equation, DOWN, buff=1)
+        dot.next_to(matrix)
+        vector.next_to(dot)
+        eq.next_to(vector)
+        result_equation.next_to(eq)
+
+        tmp3.next_to(eq, DOWN, buff=2)
+        tmp3.to_edge(LEFT, buff=1)
+        result_vector.next_to(tmp3)
+        result = VGroup(tmp3, result_vector)
+
+        equation = VGroup(matrix, dot, vector, eq, result_equation, result)
+
+        self.add(general_equation, equation, result)
+
+        # self.wait()
+        # self.play(matrix.animate.to_corner(UL, buff=1), FadeOut(matrix_text))
+        # multiplication.next_to(matrix)
+        # self.play(FadeIn(multiplication))
+        # result.next_to(multiplication)
+        # self.play(FadeIn(result))
+
+        # result_vector_simplified[0].next_to(result_vector_simplified[1], LEFT)
+        # result_vector_simplified.next_to(result, DOWN, buff=1)
+        # result_vector_simplified.shift(2*LEFT)
+        # self.play(FadeIn(result_vector_simplified))
+        # self.wait()
 
 
 class ShearSummarySlide(Scene):
