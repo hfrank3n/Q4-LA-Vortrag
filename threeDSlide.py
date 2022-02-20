@@ -45,34 +45,52 @@ class ShearAnimationSlide(ThreeDScene):
 
 class RotationAnimationSlide(ThreeDScene):
     def construct(self):
-        deg = -45
+        y_deg = -45
+        z_deg = 45
         x_rotation = [
             [1, 0, 0],
-            [0, cos(deg * DEGREES), -sin(deg * DEGREES)],
-            [0, sin(deg * DEGREES), cos(deg * DEGREES)]
+            [0, cos(y_deg * DEGREES), -sin(y_deg * DEGREES)],
+            [0, sin(y_deg * DEGREES), cos(y_deg * DEGREES)]
         ]
         y_rotation = [
-            [cos(deg * DEGREES), 0, sin(deg * DEGREES)],
+            [cos(y_deg * DEGREES), 0, sin(y_deg * DEGREES)],
             [0, 1, 0],
-            [-sin(deg * DEGREES), 0, cos(deg * DEGREES)]
+            [-sin(y_deg * DEGREES), 0, cos(y_deg * DEGREES)]
+        ]
+        z_rotation = [
+            [cos(z_deg * DEGREES), -sin(z_deg * DEGREES), 0],
+            [sin(z_deg * DEGREES), cos(z_deg * DEGREES), 0],
+            [0, 0, 1]
         ]
 
         x_rotation_matrix_body = MobjectMatrix([
             [MathTex("1"), MathTex("0"), MathTex("0")],
-            [MathTex("0"), MathTex("cos(", deg, ")"),
-             MathTex("-sin(", deg, ")")],
-            [MathTex("0"), MathTex("sin(", deg, ")"),
-             MathTex("cos(", deg, ")")]
-        ], h_buff=2.2)
+            [MathTex("0"), MathTex("cos(", y_deg, ")"),
+             MathTex("-sin(", y_deg, ")")],
+            [MathTex("0"), MathTex("sin(", y_deg, ")"),
+             MathTex("cos(", y_deg, ")")]
+        ], h_buff=2.5)
+
         y_rotation_matrix_body = MobjectMatrix([
-            [MathTex("cos(", deg, ")"), MathTex(
-                "0"), MathTex("sin(", deg, ")")],
-            [MathTex("0"), MathTex("1"), MathTex("0")],
-            [MathTex("-sin(", deg, ")"), MathTex("0"),
-             MathTex("cos(", deg, ")")]
+            [MathTex("cos(", y_deg, ")"), MathTex(
+                "0"), MathTex("sin(", y_deg, ")")],
+            [MathTex(r"0"), MathTex("1"), MathTex("0")],
+            [MathTex("-sin(", y_deg, ")"), MathTex("0"),
+             MathTex("cos(", y_deg, ")")]
         ], h_buff=1.8)
-        z_rotation_matrix_body = MobjectMatrix([[MathTex("cos(", deg, ")"), MathTex("-sin(", deg, ")"), MathTex("0")], [
-                                               MathTex("sin(", deg, ")"), MathTex("cos(", deg, ")"), MathTex("0")], [MathTex("0"), MathTex("0"), MathTex("1")]])
+        y_rotation_matrix_body.get_columns()[1].shift(LEFT)
+        y_rotation_matrix_body.get_columns()[2].shift(0.6*LEFT)
+        y_rotation_matrix_body.get_brackets()[1].shift(0.8*LEFT)
+
+        z_rotation_matrix_body = MobjectMatrix([
+            [MathTex("cos(", z_deg, ")"), MathTex(
+                "-sin(", z_deg, ")"), MathTex("0")],
+            [MathTex("sin(", z_deg, ")"), MathTex(
+                "cos(", z_deg, ")"), MathTex("0")],
+            [MathTex("0"), MathTex("0"), MathTex("1")]
+        ], h_buff=2.2)
+        z_rotation_matrix_body.get_columns()[2].shift(LEFT)
+        z_rotation_matrix_body.get_brackets()[1].shift(LEFT)
 
         axes = ThreeDAxes(
             x_range=[-5, 5, 1],
@@ -89,22 +107,39 @@ class RotationAnimationSlide(ThreeDScene):
 
         vGroup = VGroup(v1, v2, v3)
 
-        matrix_text = MathTex("T=")
-        matrix_text.next_to(y_rotation_matrix_body, LEFT)
+        y_matrix_text = MathTex("T=")
+        y_matrix_text.next_to(y_rotation_matrix_body, LEFT)
 
-        label = VGroup(y_rotation_matrix_body, matrix_text)
-        label.add_background_rectangle(BLACK, 0.5)
-        label.scale(0.8)
-        self.add_fixed_in_frame_mobjects(label)
-        label.to_corner(UR, buff=1)
+        y_label = VGroup(y_rotation_matrix_body, y_matrix_text)
+        y_label.add_background_rectangle(BLACK, 0.5)
+        y_label.scale(0.8)
+
+        z_matrix_text = MathTex("T=")
+        z_matrix_text.next_to(z_rotation_matrix_body, LEFT)
+
+        z_label = VGroup(z_rotation_matrix_body, z_matrix_text)
+        z_label.add_background_rectangle(BLACK, 0.5)
+        z_label.scale(0.8)
 
         self.add(axes, vGroup)
         self.wait(2)
         self.move_camera(phi=60 * DEGREES, theta=30 * DEGREES, run_time=2)
         self.wait()
+
+        self.add_fixed_in_frame_mobjects(y_label)
+        y_label.to_corner(UR, buff=1)
+        self.wait()
+
         self.begin_ambient_camera_rotation(rate=PI/8)
+
         self.play(vGroup.animate.apply_matrix(y_rotation), run_time=3)
         self.play(vGroup.animate.apply_matrix(y_rotation), run_time=3)
-        self.play(vGroup.animate.apply_matrix(y_rotation), run_time=3)
-        self.play(vGroup.animate.apply_matrix(y_rotation), run_time=3)
+
+        self.remove(y_label)
+        self.add_fixed_in_frame_mobjects(z_label)
+        z_label.to_corner(UR, buff=1)
+        self.wait()
+
+        self.play(vGroup.animate.apply_matrix(z_rotation), run_time=3)
+        self.play(vGroup.animate.apply_matrix(z_rotation), run_time=3)
         self.wait()
