@@ -197,8 +197,23 @@ class WeakPerspectiveProjection(ThreeDScene):
             phi=60 * DEGREES, theta=30 * DEGREES, run_time=3)
 
         points = [[0, 0, 1.5], [1.5, 0, 1.5], [1.5, 1.5, 1.5], [
-            0, 1.5, 3], [0, 0, 3], [1.5, 0, 3], [1.5, 1.5, 3], [0, 1.5, 3]]
+            0, 1.5, 1.5], [0, 0, 3], [1.5, 0, 3], [1.5, 1.5, 3], [0, 1.5, 3]]
         new_points = []
         for point in points:
-            new_points.append(np.array(point) * (1/point[2]))
+            new_point = np.array(point) * (1/point[2])
+            new_points.append(new_point)
         print(new_points)
+        square1 = Square().set_points_as_corners(new_points[:5])
+        square1.add_background_rectangle(BLUE, opacity=0.5)
+
+        line = Line(start=new_points[2], end=new_points[6])
+
+        square2 = Square().set_points_as_corners(new_points[5:])
+        square2.add_background_rectangle(DARK_BLUE, opacity=0.8)
+        squares = VGroup(square1, square2)
+
+        self.begin_ambient_camera_rotation(rate=PI/8)
+        self.move_camera(phi=0, theta=-90 * DEGREES,
+                         added_anims=[ReplacementTransform(house, squares), GrowFromEdge(line, DL)], run_time=3)
+
+        self.wait(2)
