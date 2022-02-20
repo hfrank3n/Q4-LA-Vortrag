@@ -49,9 +49,14 @@ class TitlePage(Scene):
         title = Text("Lineare Transformationen",
                      gradient=(GREEN, BLUE), font_size=80)
         self.play(Write(title))
-        names = Text("Daniel Dietzler und Hannah Franken",
-                     font_size=20).to_corner(DL)
-        self.play(AddTextLetterByLetter(names))
+        names = Tex("Daniel Dietzler und Hannah Franken",
+                    font_size=16).to_corner(DL)
+        sub_title = Tex(r"Landgraf-Ludwigs-Gymnasium \textemdash \, Mathe Q4 Sg",
+                        font_size=16).to_edge(DOWN)
+        date = Tex("21.02.2022", font_size=16).to_corner(DR)
+        footer = VGroup(names, sub_title, date)
+        self.play(FadeIn(footer))
+
         self.wait(4)
 
 
@@ -170,10 +175,11 @@ class MatrixMultiplication(Scene):
         result_vector.next_to(tmp3)
         result = VGroup(tmp3, result_vector)
 
-        equation = VGroup(matrix, dot, vector, eq, result_equation, result)
+        equation = VGroup(matrix, dot, vector, eq)
 
         self.add(general_equation)
         self.add(equation)
+        self.add(result_equation)
         self.add(result)
 
         # self.wait()
